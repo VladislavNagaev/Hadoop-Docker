@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+
+<configuration>
+
+    <property>
+        <name>fs.defaultFS</name>
+        <value>$CORE_CONF_fs_defaultFS</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-project-dist/hadoop-common/core-default.xml#fs.defaultFS
+        The name of the default file system. A URI whose scheme and authority determine the FileSystem implementation. 
+        The uri's scheme determines the config property (fs.SCHEME.impl) naming the FileSystem implementation class. 
+        The uri's authority is used to determine the host, port, etc. for a filesystem.
+        </description>
+    </property>
+
+    <property>
+        <name>hadoop.http.staticuser.user</name>
+        <value>$CORE_CONF_hadoop_http_staticuser_user</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-project-dist/hadoop-common/core-default.xml#hadoop.http.staticuser.user
+        The user name to filter as, on static web filters while rendering content. 
+        An example use is the HDFS web UI (user to be used for browsing files).
+        </description>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.hue.hosts</name>
+        <value>$CORE_CONF_hadoop_proxyuser_hue_hosts</value>
+        <description>
+        https://hadoop.apache.org/docs//r3.3.4/hadoop-project-dist/hadoop-common/Superusers.html
+        </description>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.hue.groups</name>
+        <value>$CORE_CONF_hadoop_proxyuser_hue_groups</value>
+        <description>
+        https://hadoop.apache.org/docs//r3.3.4/hadoop-project-dist/hadoop-common/Superusers.html
+        </description>
+    </property>
+
+    <property>
+        <name>io.compression.codecs</name>
+        <value>$CORE_CONF_io_compression_codecs</value>
+        <description>
+        https://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/io/compress/SnappyCodec.html
+        https://hadoop.apache.org/docs/r3.3.4/api/org/apache/hadoop/io/compress/package-summary.html
+        </description>
+    </property>
+
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>$CORE_CONF_tmp_dir</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-project-dist/hadoop-common/core-default.xml#hadoop.tmp.dir
+        A base for other temporary directories.
+        </description>
+    </property>
+
+</configuration>

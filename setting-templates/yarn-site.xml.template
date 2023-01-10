@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+
+<configuration>
+
+    <property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>$YARN_CONF_yarn_log___aggregation___enable</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.log-aggregation-enable
+        Whether to enable log aggregation. 
+        Log aggregation collects each container's logs and moves these logs onto a file-system, for e.g. HDFS, after the application completes. 
+        Users can configure the "yarn.nodemanager.remote-app-log-dir" and "yarn.nodemanager.remote-app-log-dir-suffix" properties to determine where these logs are moved to. 
+        Users can access the logs via the Application Timeline Server.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.log.server.url</name>
+        <value>$YARN_CONF_yarn_log_server_url</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.log.server.url
+        URL for log aggregation server
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.recovery.enabled</name>
+        <value>$YARN_CONF_yarn_resourcemanager_recovery_enabled</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.recovery.enabled
+        Enable RM to recover state after starting. If true, then yarn.resourcemanager.store.class must be specified.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.store.class</name>
+        <value>$YARN_CONF_yarn_resourcemanager_store_class</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.store.class
+        The class to use as the persistent store. 
+        If org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore is used, 
+        the store is implicitly fenced; meaning a single ResourceManager is able to use the store at any point in time. 
+        More details on this implicit fencing, along with setting up appropriate ACLs is discussed under yarn.resourcemanager.zk-state-store.root-node.acl.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.scheduler.class</name>
+        <value>$YARN_CONF_yarn_resourcemanager_scheduler_class</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.scheduler.class
+        The class to use as the resource scheduler.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.capacity.root.default.maximum-allocation-mb</name>
+        <value>$YARN_CONF_yarn_scheduler_capacity_root_default_maximum___allocation___mb</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-site/CapacityScheduler.html
+        The per queue maximum limit of memory to allocate to each container request at the Resource Manager. 
+        This setting overrides the cluster configuration yarn.scheduler.maximum-allocation-mb. 
+        This value must be smaller than or equal to the cluster maximum.
+        </description>
+    </property>
+
+    <!-- <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>8192</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.scheduler.maximum-allocation-mb
+        The maximum allocation for every container request at the RM in MBs. 
+        Memory requests higher than this will throw an InvalidResourceRequestException.
+        </description>
+    </property> -->
+    
+    <property>
+        <name>yarn.scheduler.capacity.root.default.maximum-allocation-vcores</name>
+        <value>$YARN_CONF_yarn_scheduler_capacity_root_default_maximum___allocation___vcores</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-site/CapacityScheduler.html
+        The per queue maximum limit of virtual cores to allocate to each container request at the Resource Manager. 
+        This setting overrides the cluster configuration yarn.scheduler.maximum-allocation-vcores. 
+        This value must be smaller than or equal to the cluster maximum.
+        </description>
+    </property>
+
+    <!-- <property>
+        <name>yarn.scheduler.maximum-allocation-vcores</name>
+        <value>4</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.scheduler.maximum-allocation-vcores
+        The maximum allocation for every container request at the RM in terms of virtual CPU cores. 
+        Requests higher than this will throw an InvalidResourceRequestException.
+        </description>
+    </property> -->
+
+    <property>
+        <name>yarn.resourcemanager.fs.state-store.uri</name>
+        <value>$YARN_CONF_yarn_resourcemanager_fs_state___store_uri</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.fs.state-store.uri
+        URI pointing to the location of the FileSystem path where RM state will be stored. 
+        This must be supplied when using org.apache.hadoop.yarn.server.resourcemanager.recovery.FileSystemRMStateStore as the value for yarn.resourcemanager.store.class
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.system-metrics-publisher.enabled</name>
+        <value>$YARN_CONF_yarn_resourcemanager_system___metrics___publisher_enabled</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.system-metrics-publisher.enabled
+        The setting that controls whether yarn system metrics is published on the Timeline service or not by RM And NM.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>$YARN_CONF_yarn_resourcemanager_hostname</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.hostname
+        The hostname of the RM.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.address</name>
+        <value>$YARN_CONF_yarn_resourcemanager_address</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.address
+        The address of the applications manager interface in the RM.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.scheduler.address</name>
+        <value>$YARN_CONF_yarn_resourcemanager_scheduler_address</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.scheduler.address
+        The address of the scheduler interface.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.resource-tracker.address</name>
+        <value>$YARN_CONF_yarn_resourcemanager_resource__tracker_address</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.resource-tracker.address
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.timeline-service.enabled</name>
+        <value>$YARN_CONF_yarn_timeline___service_enabled</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.timeline-service.enabled
+        In the server side it indicates whether timeline service is enabled or not. 
+        And in the client side, users can enable it to indicate whether client wants to use timeline service. 
+        If its enabled in the client side along with security, then yarn client tries to fetch the delegation tokens for the timeline server.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.timeline-service.generic-application-history.enabled</name>
+        <value>$YARN_CONF_yarn_timeline___service_generic___application___history_enabled</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-site/TimelineServer.html
+        Indicate to clients whether to query generic application data from timeline history-service or not. 
+        If not enabled then application data is queried only from Resource Manager. Defaults to false.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.timeline-service.hostname</name>
+        <value>$YARN_CONF_yarn_timeline___service_hostname</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.timeline-service.hostname
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-site/TimelineServer.html
+        The hostname of the timeline service web application.
+        </description>
+    </property>
+
+    <property>
+        <name>mapreduce.map.output.compress</name>
+        <value>$YARN_CONF_mapreduce_map_output_compress</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapreduce.map.output.compress
+        Should the outputs of the maps be compressed before being sent across the network. Uses SequenceFile compression.
+        </description>
+    </property>
+
+    <property>
+        <name>mapred.map.output.compress.codec</name>
+        <value>$YARN_CONF_mapred_map_output_compress_codec</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapreduce.map.output.compress.codec
+        If the map outputs are compressed, how should they be compressed?
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.resource.detect-hardware-capabilities</name>
+        <value>$YARN_CONF_yarn_nodemanager_resource_detect___hardware___capabilities</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.resource.detect-hardware-capabilities
+        Enable auto-detection of node capabilities such as memory and CPU.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>$YARN_CONF_yarn_nodemanager_resource_memory___mb</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.resource.memory-mb
+        Amount of physical memory, in MB, that can be allocated for containers. 
+        If set to -1 and yarn.nodemanager.resource.detect-hardware-capabilities is true, it is automatically calculated(in case of Windows and Linux). 
+        In other cases, the default is 8192MB.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>$YARN_CONF_yarn_nodemanager_resource_cpu___vcores</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.resource.cpu-vcores
+        Number of vcores that can be allocated for containers. 
+        This is used by the RM scheduler when allocating resources for containers. 
+        This is not used to limit the number of CPUs used by YARN containers. 
+        If it is set to -1 and yarn.nodemanager.resource.detect-hardware-capabilities is true, 
+        it is automatically determined from the hardware in case of Windows and Linux. 
+        In other cases, number of vcores is 8 by default.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
+        <value>$YARN_CONF_yarn_nodemanager_disk___health___checker_max___disk___utilization___per___disk___percentage</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage
+        The maximum percentage of disk space utilization allowed after which a disk is marked as bad. 
+        Values can range from 0.0 to 100.0. If the value is greater than or equal to 100, the nodemanager will check for full disk. 
+        This applies to yarn.nodemanager.local-dirs and yarn.nodemanager.log-dirs when yarn.nodemanager.disk-health-checker.disk-utilization-threshold.enabled is true.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.remote-app-log-dir</name>
+        <value>$YARN_CONF_yarn_nodemanager_remote___app___log___dir</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.remote-app-log-dir
+        Where to aggregate logs to.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>$YARN_CONF_yarn_nodemanager_aux___services</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.aux-services
+        A comma separated list of services where service name should only contain a-zA-Z0-9_ and can not start with numbers
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.bind-host</name>
+        <value>$YARN_CONF_yarn_resourcemanager_bind___host</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.resourcemanager.bind-host
+        The actual address the server will bind to. 
+        If this optional address is set, the RPC and webapp servers will bind to this address and 
+        the port specified in yarn.resourcemanager.address and yarn.resourcemanager.webapp.address, respectively. 
+        This is most useful for making RM listen to all interfaces by setting to 0.0.0.0.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.bind-host</name>
+        <value>$YARN_CONF_yarn_nodemanager_bind___host</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.bind-host
+        The actual address the server will bind to. 
+        If this optional address is set, the RPC and webapp servers will bind to this address and 
+        the port specified in yarn.nodemanager.address and yarn.nodemanager.webapp.address, respectively. 
+        This is most useful for making NM listen to all interfaces by setting to 0.0.0.0.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.timeline-service.bind-host</name>
+        <value>$YARN_CONF_yarn_timeline___service_bind___host</value>
+        <description>
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.timeline-service.bind-host
+        The actual address the server will bind to. 
+        If this optional address is set, the RPC and webapp servers will bind to this address and 
+        the port specified in yarn.timeline-service.address and yarn.timeline-service.webapp.address, respectively. 
+        This is most useful for making the service listen to all interfaces by setting to 0.0.0.0.
+        </description>
+    </property>
+
+    <property>
+        <name>yarn.timeline-service.leveldb-timeline-store.path</name>
+        <value>$YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path</value>
+        <description>
+        https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/TimelineServer.html
+        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.timeline-service.leveldb-timeline-store.path
+        Store file name for leveldb timeline store. Defaults to ${hadoop.tmp.dir}/yarn/timeline.
+        </description>
+    </property>
+
+</configuration>
+
+
+
+
