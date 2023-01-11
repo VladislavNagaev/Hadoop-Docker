@@ -9,35 +9,34 @@ USER root
 # Выбор рабочей директории
 WORKDIR /
 
-ARG \
+ENV \ 
     # Задание переменных пользователя
-    user=user \
-    uid=707 \
-    gid=user-group \
+    USER=root \
+    UID=0 \
+    GROUP=hadoop \
+    GID=1001 \
+    GROUPS="root,hadoop" \
+    # Выбор time zone
+    TZ=Europe/Moscow \
+    # Директория пользовательских приложений
+    APPS_HOME=/opt \
     # Задание версий сервисов
     JAVA_VERSION=11 \
     HADOOP_VERSION=3.3.4
 
 ENV \
-    # Задание директории домашнего каталога
-    HOME=/home/${user} \
-    # Задание версий сервисов
-    JAVA_VERSION=${JAVA_VERSION} \
-    HADOOP_VERSION=${HADOOP_VERSION} \
-    # Полные наименования сервисов
-    HADOOP_NAME=hadoop-${HADOOP_VERSION} \
-    # URL-адреса для скачивания
-    HADOOP_URL=https://downloads.apache.org/hadoop/core/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz \
-    # Директория пользовательских приложений
-    APPS_HOME=/opt \
     # Задание домашних директорий
     JAVA_HOME=/usr/lib/jvm/java \
     HADOOP_HOME=${APPS_HOME}/hadoop \
     HADOOP_CONF_DIR=/etc/hadoop \
-    # Выбор time zone
-    TZ=Europe/Moscow \
+    # Полные наименования сервисов
+    HADOOP_NAME=hadoop-${HADOOP_VERSION}
+
+ENV \
+    # URL-адреса для скачивания
+    HADOOP_URL=https://downloads.apache.org/hadoop/core/${HADOOP_NAME}/${HADOOP_NAME}.tar.gz \
     # Обновление переменных путей
-    PATH=${PATH}:${JAVA_HOME}/bin:${HADOOP_HOME}/bin:${HOME}/.local/bin \
+    PATH=${PATH}:${JAVA_HOME}/bin:${HADOOP_HOME}/bin \
     # Рабочая директория 
     WORK_DIRECTORY=/workspace \
     # Директория логов
@@ -47,11 +46,9 @@ RUN \
     # --------------------------------------------------------------------------
     # Базовая настройка операционной системы
     # --------------------------------------------------------------------------
-    # Создание домашней директории
-    mkdir -p ${HOME} && \
-    # Создание группы и отдельного пользователя в ней
-    groupadd ${gid} && \
-    useradd --system --create-home --home-dir ${HOME} --shell /bin/bash --gid ${gid} --groups sudo --uid ${uid} ${user} && \
+    # Создание группы и назначение пользователя в ней
+    groupadd --gid ${GID} --non-unique ${GROUP} && \
+    usermod --append --groups ${GROUPS} ${USER} && \
     # Обновление путей
     apt -y update && \
     # Установка timezone
@@ -110,27 +107,29 @@ RUN \
     ln -s ${APPS_HOME}/${HADOOP_NAME} ${HADOOP_HOME} && \
     # Создание символической ссылки на HADOOP_CONF_DIR
     ln -s ${HADOOP_HOME}/etc/hadoop ${HADOOP_CONF_DIR} && \
+    chown -R ${USER}:${GID} ${HADOOP_CONF_DIR} && \
+    chmod -R a+rw ${HADOOP_CONF_DIR} && \
     # Рабочая директория Apache Hadoop
     mkdir -p ${HADOOP_HOME}/logs && \
-    chmod a+rwx ${HADOOP_HOME} && \
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Очистка кэша
-    # --------------------------------------------------------------------------
-    rm -rf /var/lib/apt/lists/* && \
-    # --------------------------------------------------------------------------
+    chown -R ${USER}:${GID} ${HADOOP_HOME} && \
+    chmod -R a+rwx ${HADOOP_HOME} && \
     # --------------------------------------------------------------------------
     # Подготовка директорий
     # --------------------------------------------------------------------------
     # Директория логов
     mkdir -p ${LOG_DIRECTORY} && \
-    chmod a+w ${LOG_DIRECTORY} && \
+    chown -R ${USER}:${GID} ${LOG_DIRECTORY} && \
+    chmod -R a+rw ${LOG_DIRECTORY} && \
     # Рабочая директория
     mkdir -p ${WORK_DIRECTORY} && \
-    chown -R ${user}:${gid} ${WORK_DIRECTORY} && \
-    chmod a+rwx ${WORK_DIRECTORY} && \
-    # Выбор рабочей директории
-    cd ${WORK_DIRECTORY}
+    chown -R ${USER}:${GID} ${WORK_DIRECTORY} && \
+    chmod -R a+rwx ${WORK_DIRECTORY} && \
+    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Очистка кэша
+    # --------------------------------------------------------------------------
+    rm -rf /var/lib/apt/lists/*
+    # --------------------------------------------------------------------------
 
 ENV \
     # Выбор языкового пакета
@@ -138,15 +137,17 @@ ENV \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
-# Выбор рабочей директории
-# WORKDIR ${WORK_DIRECTORY}
-
 # Копирование файлов проекта
 COPY ./entrypoint /entrypoint
 COPY ./setting-templates /setting-templates
 
-# Изменение рабочего пользователя
-# USER ${user}
+RUN \
+    # Директория entrypoint
+    chown -R ${USER}:${GID} /entrypoint && \
+    chmod -R a+x entrypoint && \
+    # Директория setting-templates
+    chown -R ${USER}:${GID} /setting-templates && \
+    chmod -R a+rw setting-templates
 
 # Точка входа
 CMD ["/bin/bash", "/entrypoint/base.sh"]

@@ -11,12 +11,10 @@ x-args:
   CORE_CONF_tmp_dir: ${CORE_CONF_tmp_dir:-/hadoop/tmp}
 
   HDFS_CONF_dfs_replication: ${HDFS_CONF_dfs_replication:-3}
+  HDFS_CONF_dfs_blocksize: ${HDFS_CONF_dfs_blocksize:-134217728}
   HDFS_CONF_dfs_permissions_enabled: ${HDFS_CONF_dfs_permissions_enabled:-false}
   HDFS_CONF_dfs_namenode_datanode_registration_ip___hostname___check: ${HDFS_CONF_dfs_namenode_datanode_registration_ip___hostname___check:-false}
-  HDFS_CONF_dfs_namenode_name_path: ${HDFS_CONF_dfs_namenode_name_path:-/hadoop/dfs/namenode}
-  HDFS_CONF_dfs_datanode_data_path: ${HDFS_CONF_dfs_datanode_data_path:-/hadoop/dfs/datanode}
-  HDFS_CONF_dfs_namenode_name_dir: ${HDFS_CONF_dfs_namenode_name_dir:-file:///hadoop/dfs/namenode}
-  HDFS_CONF_dfs_datanode_data_dir: ${HDFS_CONF_dfs_datanode_data_dir:-file:///hadoop/dfs/datanode}
+  HDFS_CONF_dfs_path: ${HDFS_CONF_dfs_path:-/hadoop/dfs}
   HDFS_CONF_dfs_namenode_safemode_extension: ${HDFS_CONF_dfs_namenode_safemode_extension:-30000}
 
   YARN_CONF_yarn_log___aggregation___enable: ${YARN_CONF_yarn_log___aggregation___enable:-true}
@@ -41,7 +39,6 @@ x-args:
   YARN_CONF_yarn_nodemanager_resource_memory___mb: ${YARN_CONF_yarn_nodemanager_resource_memory___mb:-16384}
   YARN_CONF_yarn_nodemanager_resource_cpu___vcores: ${YARN_CONF_yarn_nodemanager_resource_cpu___vcores:-8}
   YARN_CONF_yarn_nodemanager_disk___health___checker_max___disk___utilization___per___disk___percentage: ${YARN_CONF_yarn_nodemanager_disk___health___checker_max___disk___utilization___per___disk___percentage:-98.5}
-  YARN_CONF_yarn_nodemanager_remote___app___log___dir: ${YARN_CONF_yarn_nodemanager_remote___app___log___dir:-/app-logs}
   YARN_CONF_yarn_nodemanager_aux___services: ${YARN_CONF_yarn_nodemanager_aux___services:-mapreduce_shuffle}
   YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path: ${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path:-/hadoop/yarn/timeline}
 
@@ -79,11 +76,14 @@ services:
         mode: host
     volumes:
       - type: bind
-        source: /home/admin/Apps/hadoop-data/namenode
-        target: ${HDFS_CONF_dfs_namenode_name_path:-/hadoop/dfs/namenode}
+        source: /home/${USER}/Apps/hadoop-data/namenode
+        target: ${HDFS_CONF_dfs_path:-/hadoop/dfs}/namenode
       - type: bind
-        source: /home/admin/Apps/hadoop-workspace
+        source: /home/${USER}/Apps/hadoop-workspace
         target: /workspace
+      - type: bind
+        source: /home/${USER}/Apps/hadoop-logs
+        target: /tmp/logs
     entrypoint: ["/bin/bash", "/entrypoint/namenode.sh"]
 
   hadoop-datanode:
@@ -95,8 +95,8 @@ services:
       SERVICE_PRECONDITION: "hadoop-namenode:9870"
     volumes:
       - type: bind
-        source: /home/admin/Apps/hadoop-data/datanode
-        target: ${HDFS_CONF_dfs_datanode_data_path:-/hadoop/dfs/datanode}
+        source: /home/${USER}/Apps/hadoop-data/datanode
+        target: ${HDFS_CONF_dfs_path:-/hadoop/dfs}/datanode
     depends_on:
       - hadoop-namenode
     entrypoint: ["/bin/bash", "/entrypoint/datanode.sh"]
@@ -135,7 +135,7 @@ services:
       SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864 hadoop-resourcemanager:8088"
     volumes:
       - type: bind
-        source: /home/admin/Apps/hadoop-data/historyserver
+        source: /home/${USER}/Apps/hadoop-data/historyserver
         target: ${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path:-/hadoop/yarn/timeline}
     depends_on:
       - hadoop-namenode

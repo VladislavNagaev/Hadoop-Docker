@@ -8,8 +8,8 @@
         <name>mapreduce.framework.name</name>
         <value>$MAPRED_CONF_mapreduce_framework_name</value>
         <description>
-        https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapreduce.framework.name
-        The runtime framework for executing MapReduce jobs. Can be one of local, classic or yarn.
+            https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapreduce.framework.name
+            The runtime framework for executing MapReduce jobs. Can be one of local, classic or yarn.
         </description>
     </property>
 
@@ -17,12 +17,12 @@
         <name>mapred.child.java.opts</name>
         <value>$MAPRED_CONF_mapred_child_java_opts</value>
         <description>
-        https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapred.child.java.opts
-        Java opts for the task processes. The following symbol, if present, will be interpolated: @taskid@ is replaced by current TaskID. Any other occurrences of '@' will go unchanged. 
-        For example, to enable verbose gc logging to a file named for the taskid in /tmp and to set the heap maximum to be a gigabyte, 
-        pass a 'value' of: -Xmx1024m -verbose:gc -Xloggc:/tmp/@taskid@.gc Usage of -Djava.library.path can cause programs to no longer function if hadoop native libraries are used. 
-        These values should instead be set as part of LD_LIBRARY_PATH in the map / reduce JVM env using the mapreduce.map.env and mapreduce.reduce.env config settings. 
-        If -Xmx is not set, it is inferred from mapreduce.{map|reduce}.memory.mb and mapreduce.job.heap.memory-mb.ratio.
+            https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapred.child.java.opts
+            Java opts for the task processes. The following symbol, if present, will be interpolated: @taskid@ is replaced by current TaskID. Any other occurrences of '@' will go unchanged. 
+            For example, to enable verbose gc logging to a file named for the taskid in /tmp and to set the heap maximum to be a gigabyte, 
+            pass a 'value' of: -Xmx1024m -verbose:gc -Xloggc:/tmp/@taskid@.gc Usage of -Djava.library.path can cause programs to no longer function if hadoop native libraries are used. 
+            These values should instead be set as part of LD_LIBRARY_PATH in the map / reduce JVM env using the mapreduce.map.env and mapreduce.reduce.env config settings. 
+            If -Xmx is not set, it is inferred from mapreduce.{map|reduce}.memory.mb and mapreduce.job.heap.memory-mb.ratio.
         </description>
     </property>
 
@@ -30,10 +30,10 @@
         <name>mapreduce.map.memory.mb</name>
         <value>$MAPRED_CONF_mapreduce_map_memory_mb</value>
         <description>
-        https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapreduce.map.memory.mb
-        The amount of memory to request from the scheduler for each map task. 
-        If this is not specified or is non-positive, it is inferred from mapreduce.map.java.opts and mapreduce.job.heap.memory-mb.ratio. 
-        If java-opts are also not specified, we set it to 1024
+            https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapreduce.map.memory.mb
+            The amount of memory to request from the scheduler for each map task. 
+            If this is not specified or is non-positive, it is inferred from mapreduce.map.java.opts and mapreduce.job.heap.memory-mb.ratio. 
+            If java-opts are also not specified, we set it to 1024
         </description>
     </property>
 
@@ -41,10 +41,10 @@
         <name>mapreduce.reduce.memory.mb</name>
         <value>$MAPRED_CONF_mapreduce_reduce_memory_mb</value>
         <description>
-        https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapreduce.reduce.memory.mb
-        The amount of memory to request from the scheduler for each reduce task. 
-        If this is not specified or is non-positive, it is inferred from mapreduce.reduce.java.opts and mapreduce.job.heap.memory-mb.ratio. 
-        If java-opts are also not specified, we set it to 1024.
+            https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#mapreduce.reduce.memory.mb
+            The amount of memory to request from the scheduler for each reduce task. 
+            If this is not specified or is non-positive, it is inferred from mapreduce.reduce.java.opts and mapreduce.job.heap.memory-mb.ratio. 
+            If java-opts are also not specified, we set it to 1024.
         </description>
     </property>
 
@@ -66,12 +66,12 @@
         <name>yarn.app.mapreduce.am.env</name>
         <value>$MAPRED_CONF_yarn_app_mapreduce_am_env</value>
         <description>
-        https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#yarn.app.mapreduce.am.env
-        User added environment variables for the MR App Master processes, specified as a comma separated list. Example : 
-        1) A=foo This will set the env variable A to foo 
-        2) B=$B:c This is inherit tasktracker's B env variable. 
-        To define environment variables individually, you can specify multiple properties of the form yarn.app.mapreduce.am.env.VARNAME, where VARNAME is the name of the environment variable. 
-        This is the only way to add a variable when its value contains commas.
+            https://hadoop.apache.org/docs/r3.3.4/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml#yarn.app.mapreduce.am.env
+            User added environment variables for the MR App Master processes, specified as a comma separated list. Example : 
+            1) A=foo This will set the env variable A to foo 
+            2) B=$B:c This is inherit tasktracker's B env variable. 
+            To define environment variables individually, you can specify multiple properties of the form yarn.app.mapreduce.am.env.VARNAME, where VARNAME is the name of the environment variable. 
+            This is the only way to add a variable when its value contains commas.
         </description>
     </property>
 
@@ -93,11 +93,11 @@
         <name>yarn.nodemanager.bind-host</name>
         <value>$MAPRED_CONF_yarn_nodemanager_bind___host</value>
         <description>
-        https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.bind-host
-        The actual address the server will bind to. 
-        If this optional address is set, the RPC and webapp servers will bind to this address and 
-        the port specified in yarn.nodemanager.address and yarn.nodemanager.webapp.address, respectively. 
-        This is most useful for making NM listen to all interfaces by setting to 0.0.0.0.
+            https://hadoop.apache.org/docs/r3.3.4/hadoop-yarn/hadoop-yarn-common/yarn-default.xml#yarn.nodemanager.bind-host
+            The actual address the server will bind to. 
+            If this optional address is set, the RPC and webapp servers will bind to this address and 
+            the port specified in yarn.nodemanager.address and yarn.nodemanager.webapp.address, respectively. 
+            This is most useful for making NM listen to all interfaces by setting to 0.0.0.0.
         </description>
     </property>
 
