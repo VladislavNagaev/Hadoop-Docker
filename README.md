@@ -47,9 +47,8 @@ docker-compose -f docker-compose up -d
 ## Technologies
 ---
 Project is created with:
-* Python version: 3.10
-* Apache Hadoop version: 3.3.4
 * Ubuntu verion: 22.04
+* Apache Hadoop version: 3.3.4
 * Docker verion: 20.10.22
 * Docker-compose version: v2.11.1
 
