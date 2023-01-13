@@ -7,11 +7,6 @@ Create base image:
 make -f Makefile
 ~~~
 
-Configure environment variables in `example.env` and resave it as `.env`:
-~~~
-mv example.env .env
-~~~
-
 Prepare docker network:
 
 ~~~
@@ -57,27 +52,11 @@ Project Organization
 ---
 
     ├── README.md
-    │
-    ├── entrypoin    
-    │   ├── base.sh
-    │   ├── datanode.sh
-    │   ├── historyserver.sh
-    │   ├── namenode.sh
-    │   ├── nodemanager.sh
-    │   ├── resourcemanager.sh 
-    │   └── resourcemanager
-    │
-    ├── setting-templates  
-    │   ├── core-site.xml.templates
-    │   ├── hdfs-site.xml.templates
-    │   ├── mapred-site.xml.templates
-    │   └── yarn-site.xml.templates
-    │
+    ├── entrypoin.sh    
     ├── docker-compose.yaml
     ├── base.Dockerfile
-    ├── main.Dockerfile
     ├── Makefile
-    ├── .env
+    ├── hadoop.env
     ├── .dockerignore
     └── .gitignore
 

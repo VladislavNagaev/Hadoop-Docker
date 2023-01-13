@@ -1,7 +1,7 @@
 # Образ на основе которого будет создан контейнер
 FROM --platform=linux/amd64 ubuntu:22.04
 
-LABEL maintainer="Vladislav Nagaev <nagaew.vladislav@yandex.ru>"
+LABEL maintainer="Vladislav Nagaev <vladislav.nagaew@gmail.com>"
 
 # Изменение рабочего пользователя
 USER root
@@ -17,6 +17,7 @@ ENV \
     GID=1001 \
     GROUPS="root,hadoop" \
     # Выбор time zone
+    DEBIAN_FRONTEND=noninteractive \
     TZ=Europe/Moscow \
     # Директория пользовательских приложений
     APPS_HOME=/opt \
@@ -49,6 +50,8 @@ RUN \
     # Создание группы и назначение пользователя в ней
     groupadd --gid ${GID} --non-unique ${GROUP} && \
     usermod --append --groups ${GROUPS} ${USER} && \
+    # Замена ссылок на зеркало (https://launchpad.net/ubuntu/+archivemirrors)
+    sed -i 's/htt[p|ps]:\/\/archive.ubuntu.com\/ubuntu\//http:\/\/mirror.truenetwork.ru\/ubuntu/g' /etc/apt/sources.list && \
     # Обновление путей
     apt -y update && \
     # Установка timezone
@@ -58,17 +61,19 @@ RUN \
     # Установка языкового пакета
     apt install -y locales && \
     sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-    locale-gen && \
+    locale-gen  && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
     # Установка базовых пакетов
     # --------------------------------------------------------------------------
+    apt install -y apt-utils && \
     echo Y | apt install -y curl && \
     echo Y | apt install -y wget && \
     apt install -y unzip && \
     apt install -y ssh && \
     apt install -y pdsh && \
     apt install -y gettext-base && \
+    apt install -y netcat && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
     # Установка C compiler (GCC)
@@ -133,21 +138,20 @@ RUN \
 
 ENV \
     # Выбор языкового пакета
+    LC_CTYPE=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
 # Копирование файлов проекта
-COPY ./entrypoint /entrypoint
-COPY ./setting-templates /setting-templates
+COPY ./entrypoint.sh /entrypoint.sh
 
 RUN \
-    # Директория entrypoint
-    chown -R ${USER}:${GID} /entrypoint && \
-    chmod -R a+x entrypoint && \
-    # Директория setting-templates
-    chown -R ${USER}:${GID} /setting-templates && \
-    chmod -R a+rw setting-templates
+    # Директория/файл entrypoint
+    chown -R ${USER}:${GID} /entrypoint.sh && \
+    chmod -R a+x entrypoint.sh
 
-# Точка входа
-CMD ["/bin/bash", "/entrypoint/base.sh"]
+# # Точка входа
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+CMD []
