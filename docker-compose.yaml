@@ -3,7 +3,10 @@ version: "3.8"
 
 x-hadoop-common:
   &hadoop-common
-  image: hadoop-base:3.3.4
+  # image: hadoop-base:3.3.4
+  build:
+    context: .
+    dockerfile: base.Dockerfile
   networks:
     - main-overlay-network
   env_file: ./hadoop.env
@@ -93,7 +96,7 @@ services:
       SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864 hadoop-resourcemanager:8088"
     volumes:
       - type: bind
-        source: /home/${USER}/Apps/hadoop-data/historyserver
+        source: /home/${USER}/Apps/hadoop-logs/historyserver
         # YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path
         target: /hadoop/yarn/timeline
     depends_on:

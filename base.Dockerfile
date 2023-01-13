@@ -145,13 +145,13 @@ ENV \
     LC_ALL=en_US.UTF-8
 
 # Копирование файлов проекта
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./entrypoint /entrypoint
 
 RUN \
     # Директория/файл entrypoint
-    chown -R ${USER}:${GID} /entrypoint.sh && \
-    chmod -R a+x entrypoint.sh
+    chown -R ${USER}:${GID} /entrypoint && \
+    chmod -R a+x entrypoint
 
 # # Точка входа
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/entrypoint/entrypoint.sh"]
 CMD []
