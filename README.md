@@ -2,11 +2,6 @@
 
 ## Quick Start
 
-Create base image:
-~~~
-make -f Makefile
-~~~
-
 Prepare docker network:
 
 ~~~
@@ -52,7 +47,13 @@ Project Organization
 ---
 
     ├── README.md
-    ├── entrypoin.sh    
+    │
+    ├── postgres  
+    │   ├── entrypoint.sh
+    │   ├── configure.sh 
+    │   ├── initialization.sh
+    │   └── wait_for_it.sh 
+    │ 
     ├── docker-compose.yaml
     ├── base.Dockerfile
     ├── Makefile
