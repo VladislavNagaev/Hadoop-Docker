@@ -49,10 +49,10 @@ Project Organization
     ├── README.md
     │
     ├── postgres  
-    │   ├── entrypoint.sh
-    │   ├── configure.sh 
-    │   ├── initialization.sh
-    │   └── wait_for_it.sh 
+    │   ├── hadoop-entrypoint.sh
+    │   ├── hadoop-configure.sh 
+    │   ├── hadoop-initialization.sh
+    │   └── hadoop-wait_for_it.sh 
     │ 
     ├── docker-compose.yaml
     ├── base.Dockerfile

@@ -1,17 +1,17 @@
 #!/bin/bash
 
-echo "Node configuration started ..."
+echo "Hadoop-node configuration started ..."
 
 function addProperty() {
 
-  local path=$1
-  local name=$2
-  local value=$3
+    local path=$1
+    local name=$2
+    local value=$3
 
-  local entry="<property><name>$name</name><value>${value}</value></property>"
-  local escapedEntry=$(echo $entry | sed 's/\//\\\//g')
+    local entry="<property><name>$name</name><value>${value}</value></property>"
+    local escapedEntry=$(echo $entry | sed 's/\//\\\//g')
 
-  sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" $path
+    sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" $path
 
 }
 
@@ -41,4 +41,4 @@ configure ${HADOOP_CONF_DIR}/httpfs-site.xml HTTPFS_CONF
 configure ${HADOOP_CONF_DIR}/kms-site.xml KMS_CONF
 configure ${HADOOP_CONF_DIR}/mapred-site.xml MAPRED_CONF
 
-echo "Node configuration completed!"
+echo "Hadoop-node configuration completed!"

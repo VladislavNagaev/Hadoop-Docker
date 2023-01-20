@@ -3,10 +3,10 @@ version: "3.8"
 
 x-hadoop-common:
   &hadoop-common
-  # image: hadoop-base:3.3.4
-  build:
-    context: .
-    dockerfile: base.Dockerfile
+  image: hadoop-base:3.3.4
+  # build:
+  #   context: .
+  #   dockerfile: base.Dockerfile
   networks:
     - main-overlay-network
   env_file: ./hadoop.env
@@ -31,15 +31,12 @@ services:
         mode: host
     volumes:
       - type: bind
-        source: /home/${USER}/Apps/hadoop-data/namenode
+        source: ${APPS_DATA}/hadoop/namenode
         # HDFS_CONF_dfs_namenode_name_dir
         target: /hadoop/dfs/namenode
       - type: bind
-        source: /home/${USER}/Apps/hadoop-workspace
+        source: ${APPS_WORKSPACE}
         target: /workspace
-      - type: bind
-        source: /home/${USER}/Apps/hadoop-logs
-        target: /tmp/logs
 
   hadoop-datanode:
     <<: *hadoop-common
@@ -52,7 +49,7 @@ services:
       SERVICE_PRECONDITION: "hadoop-namenode:9870"
     volumes:
       - type: bind
-        source: /home/${USER}/Apps/hadoop-data/datanode
+        source: ${APPS_DATA}/hadoop/datanode
         # HDFS_CONF_dfs_datanode_data_dir
         target: /hadoop/dfs/datanode
     depends_on:
@@ -80,6 +77,11 @@ services:
       - 8042
     environment:
       SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864 hadoop-resourcemanager:8088"
+    volumes:
+      - type: bind
+        source: ${APPS_LOGS}/hadoop/nodemanager
+        # YARN_CONF_yarn_nodemanager_remote___app___log___dir
+        target: /tmp/logs/nodemanager
     depends_on:
       - hadoop-namenode
       - hadoop-datanode
@@ -96,7 +98,7 @@ services:
       SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864 hadoop-resourcemanager:8088"
     volumes:
       - type: bind
-        source: /home/${USER}/Apps/hadoop-logs/historyserver
+        source: ${APPS_LOGS}/hadoop/historyserver
         # YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path
         target: /hadoop/yarn/timeline
     depends_on:

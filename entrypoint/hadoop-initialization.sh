@@ -2,6 +2,8 @@
 
 COMMAND="${1:-}"
 
+mkdir -p ${CORE_CONF_tmp_dir}
+
 if [ "${COMMAND}" == "namenode" ]; then
 
     echo "Starting Hadoop namenode ..."
@@ -50,6 +52,8 @@ fi
 if [ "${COMMAND}" == "nodemanager" ]; then
 
     echo "Starting Hadoop nodemanager ..."
+
+    mkdir -p ${YARN_CONF_yarn_nodemanager_remote___app___log___dir}
 
     ${HADOOP_HOME}/bin/yarn --config ${HADOOP_CONF_DIR} nodemanager
 

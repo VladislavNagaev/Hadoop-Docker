@@ -11,22 +11,23 @@ WORKDIR /
 
 ENV \ 
     # Задание переменных пользователя
-    USER=root \
-    UID=0 \
-    GROUP=hadoop \
+    USER=admin \
+    UID=1001 \
+    GROUP=admin \
     GID=1001 \
-    GROUPS="root,hadoop" \
+    GROUPS="admin,root,sudo,hadoop" \
     # Выбор time zone
     DEBIAN_FRONTEND=noninteractive \
     TZ=Europe/Moscow \
     # Директория пользовательских приложений
     APPS_HOME=/opt \
     # Задание версий сервисов
-    JAVA_VERSION=11 \
+    JAVA_VERSION=8 \
     HADOOP_VERSION=3.3.4
 
 ENV \
     # Задание домашних директорий
+    HOME=/home/${USER} \
     JAVA_HOME=/usr/lib/jvm/java \
     HADOOP_HOME=${APPS_HOME}/hadoop \
     HADOOP_CONF_DIR=/etc/hadoop \
@@ -38,10 +39,10 @@ ENV \
     HADOOP_URL=https://downloads.apache.org/hadoop/core/${HADOOP_NAME}/${HADOOP_NAME}.tar.gz \
     # Обновление переменных путей
     PATH=${PATH}:${JAVA_HOME}/bin:${HADOOP_HOME}/bin \
-    # Рабочая директория 
+    # Задание директорий 
     WORK_DIRECTORY=/workspace \
-    # Директория логов
-    LOG_DIRECTORY=/tmp/logs
+    LOG_DIRECTORY=/tmp/logs \
+    ENTRYPOINT_DIRECTORY=/entrypoint
 
 RUN \
     # --------------------------------------------------------------------------
@@ -49,7 +50,8 @@ RUN \
     # --------------------------------------------------------------------------
     # Создание группы и назначение пользователя в ней
     groupadd --gid ${GID} --non-unique ${GROUP} && \
-    usermod --append --groups ${GROUPS} ${USER} && \
+    groupadd --gid 101 --non-unique hadoop && \
+    useradd --system --create-home --home-dir ${HOME} --shell /bin/bash --gid ${GID} --groups ${GROUPS} --uid ${UID} ${USER} && \
     # Замена ссылок на зеркало (https://launchpad.net/ubuntu/+archivemirrors)
     sed -i 's/htt[p|ps]:\/\/archive.ubuntu.com\/ubuntu\//http:\/\/mirror.truenetwork.ru\/ubuntu/g' /etc/apt/sources.list && \
     # Обновление путей
@@ -92,6 +94,22 @@ RUN \
     ln -s /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 /usr/lib/jvm/java && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
+    # Подготовка директорий
+    # --------------------------------------------------------------------------
+    # Директория логов
+    mkdir -p ${LOG_DIRECTORY} && \
+    chown -R ${USER}:${GID} ${LOG_DIRECTORY} && \
+    chmod -R a+rw ${LOG_DIRECTORY} && \
+    # Рабочая директория
+    mkdir -p ${WORK_DIRECTORY} && \
+    chown -R ${USER}:${GID} ${WORK_DIRECTORY} && \
+    chmod -R a+rwx ${WORK_DIRECTORY} && \
+    # Директория точек входа
+    mkdir -p ${ENTRYPOINT_DIRECTORY} && \
+    chown -R ${USER}:${GID} ${ENTRYPOINT_DIRECTORY} && \
+    chmod -R a+rx ${ENTRYPOINT_DIRECTORY} && \
+    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Установка Apache Hadoop
     # --------------------------------------------------------------------------
     # Скачивание GPG-ключа
@@ -99,9 +117,9 @@ RUN \
     # Установка gpg-ключа
     gpg --import KEYS && \
     # Скачивание архива Apache Hadoop
-    curl -fSL ${HADOOP_URL} -o /tmp/${HADOOP_NAME}.tar.gz && \
+    curl --fail --show-error --location ${HADOOP_URL} --output /tmp/${HADOOP_NAME}.tar.gz && \
     # Скачивание PGP-ключа
-    curl -fSL ${HADOOP_URL}.asc -o /tmp/${HADOOP_NAME}.tar.gz.asc && \
+    curl --fail --show-error --location ${HADOOP_URL}.asc --output /tmp/${HADOOP_NAME}.tar.gz.asc && \
     # Верификация ключа шифрования
     gpg --verify /tmp/${HADOOP_NAME}.tar.gz.asc && \
     # Распаковка архива Apache Hadoop в рабочую папку
@@ -119,17 +137,6 @@ RUN \
     chown -R ${USER}:${GID} ${HADOOP_HOME} && \
     chmod -R a+rwx ${HADOOP_HOME} && \
     # --------------------------------------------------------------------------
-    # Подготовка директорий
-    # --------------------------------------------------------------------------
-    # Директория логов
-    mkdir -p ${LOG_DIRECTORY} && \
-    chown -R ${USER}:${GID} ${LOG_DIRECTORY} && \
-    chmod -R a+rw ${LOG_DIRECTORY} && \
-    # Рабочая директория
-    mkdir -p ${WORK_DIRECTORY} && \
-    chown -R ${USER}:${GID} ${WORK_DIRECTORY} && \
-    chmod -R a+rwx ${WORK_DIRECTORY} && \
-    # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
     # Очистка кэша
     # --------------------------------------------------------------------------
@@ -145,13 +152,8 @@ ENV \
     LC_ALL=en_US.UTF-8
 
 # Копирование файлов проекта
-COPY ./entrypoint /entrypoint
+COPY ./entrypoint /entrypoint/
 
-RUN \
-    # Директория/файл entrypoint
-    chown -R ${USER}:${GID} /entrypoint && \
-    chmod -R a+x entrypoint
-
-# # Точка входа
-ENTRYPOINT ["/bin/bash", "/entrypoint/entrypoint.sh"]
+# Точка входа
+ENTRYPOINT ["/bin/bash", "/entrypoint/hadoop-entrypoint.sh"]
 CMD []
