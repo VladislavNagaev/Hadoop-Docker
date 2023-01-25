@@ -3,12 +3,10 @@ version: "3.8"
 
 x-hadoop-common:
   &hadoop-common
-  image: hadoop-base:3.3.4
+  image: hadoop-base:3.2.1
   # build:
   #   context: .
   #   dockerfile: base.Dockerfile
-  networks:
-    - main-overlay-network
   env_file: ./hadoop.env
   restart: always
 
@@ -30,12 +28,12 @@ services:
         published: 9870
         mode: host
     volumes:
-      - type: bind
-        source: ${APPS_DATA}/hadoop/namenode
+      - type: volume
+        source: hadoop-namenode-volume
         # HDFS_CONF_dfs_namenode_name_dir
         target: /hadoop/dfs/namenode
       - type: bind
-        source: ${APPS_WORKSPACE}
+        source: ./data
         target: /workspace
 
   hadoop-datanode:
@@ -48,8 +46,8 @@ services:
     environment:
       SERVICE_PRECONDITION: "hadoop-namenode:9870"
     volumes:
-      - type: bind
-        source: ${APPS_DATA}/hadoop/datanode
+      - type: volume
+        source: hadoop-datanode-volume
         # HDFS_CONF_dfs_datanode_data_dir
         target: /hadoop/dfs/datanode
     depends_on:
@@ -78,8 +76,8 @@ services:
     environment:
       SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864 hadoop-resourcemanager:8088"
     volumes:
-      - type: bind
-        source: ${APPS_LOGS}/hadoop/nodemanager
+      - type: volume
+        source: hadoop-nodemanager-volume
         # YARN_CONF_yarn_nodemanager_remote___app___log___dir
         target: /tmp/logs/nodemanager
     depends_on:
@@ -97,8 +95,8 @@ services:
     environment:
       SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864 hadoop-resourcemanager:8088"
     volumes:
-      - type: bind
-        source: ${APPS_LOGS}/hadoop/historyserver
+      - type: volume
+        source: hadoop-historyserver-volume
         # YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path
         target: /hadoop/yarn/timeline
     depends_on:
@@ -106,8 +104,8 @@ services:
       - hadoop-datanode
       - hadoop-resourcemanager
 
-networks:
-  main-overlay-network:
-    external: true
-    driver: overlay
-    attachable: true
+volumes:
+  hadoop-namenode-volume:
+  hadoop-datanode-volume:
+  hadoop-nodemanager-volume:
+  hadoop-historyserver-volume:

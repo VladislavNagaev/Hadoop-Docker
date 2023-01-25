@@ -1,0 +1,113 @@
+---
+version: "3.8"
+
+x-hadoop-common:
+  &hadoop-common
+  image: hadoop-base:3.2.1
+  # build:
+  #   context: .
+  #   dockerfile: base.Dockerfile
+  networks:
+    - main-overlay-network
+  env_file: ./hadoop.env
+  restart: always
+
+services:
+
+  hadoop-namenode:
+    <<: *hadoop-common
+    container_name: hadoop-namenode
+    command: namenode
+    environment:
+      - CLUSTER_NAME=main
+    ports:
+      # HADOOP_NAMENODE_PORT
+      - target: 9000
+        published: 9005
+        mode: host
+      # HADOOP_NAMENODE_WEBUI_PORT
+      - target: 9870
+        published: 9870
+        mode: host
+    volumes:
+      - type: bind
+        source: ${APPS_DATA}/hadoop/namenode
+        # HDFS_CONF_dfs_namenode_name_dir
+        target: /hadoop/dfs/namenode
+      - type: bind
+        source: ${APPS_WORKSPACE}
+        target: /workspace
+
+  hadoop-datanode:
+    <<: *hadoop-common
+    container_name: hadoop-datanode
+    command: datanode
+    expose:
+      # HADOOP_DATANODE_PORT
+      - 9864
+    environment:
+      SERVICE_PRECONDITION: "hadoop-namenode:9870"
+    volumes:
+      - type: bind
+        source: ${APPS_DATA}/hadoop/datanode
+        # HDFS_CONF_dfs_datanode_data_dir
+        target: /hadoop/dfs/datanode
+    depends_on:
+      - hadoop-namenode
+
+  hadoop-resourcemanager:
+    <<: *hadoop-common
+    container_name: hadoop-resourcemanager
+    command: resourcemanager
+    expose:
+      # HADOOP_RESOURCEMANAGER_PORT
+      - 8088
+    environment:
+      SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864"
+    depends_on:
+      - hadoop-namenode
+      - hadoop-datanode
+
+  hadoop-nodemanager:
+    <<: *hadoop-common
+    container_name: hadoop-nodemanager
+    command: nodemanager
+    expose:
+      # HADOOP_NODEMANAGER_PORT
+      - 8042
+    environment:
+      SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864 hadoop-resourcemanager:8088"
+    volumes:
+      - type: bind
+        source: ${APPS_LOGS}/hadoop/nodemanager
+        # YARN_CONF_yarn_nodemanager_remote___app___log___dir
+        target: /tmp/logs/nodemanager
+    depends_on:
+      - hadoop-namenode
+      - hadoop-datanode
+      - hadoop-resourcemanager
+
+  hadoop-historyserver:
+    <<: *hadoop-common
+    container_name: hadoop-historyserver
+    command: historyserver
+    expose:
+      # HADOOP_HISTORYSERVER_PORT
+      - 8188
+    environment:
+      SERVICE_PRECONDITION: "hadoop-namenode:9000 hadoop-namenode:9870 hadoop-datanode:9864 hadoop-resourcemanager:8088"
+    volumes:
+      - type: bind
+        source: ${APPS_LOGS}/hadoop/historyserver
+        # YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path
+        target: /hadoop/yarn/timeline
+    depends_on:
+      - hadoop-namenode
+      - hadoop-datanode
+      - hadoop-resourcemanager
+
+networks:
+  main-overlay-network:
+    external: true
+    driver: overlay
+    attachable: true

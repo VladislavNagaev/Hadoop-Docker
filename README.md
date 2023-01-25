@@ -2,30 +2,19 @@
 
 ## Quick Start
 
-Prepare docker network:
-
+Build image:
 ~~~
-sudo ufw enable
-
-sudo ufw allow 2377/tcp && sudo ufw allow 7946/tcp && sudo ufw allow 7946/udp && sudo ufw allow 4789/udp
-
-docker swarm init
-
-docker network create --driver=overlay --attachable main-overlay-network
+make --jobs=$(nproc --all) --file Makefile 
 ~~~
 
 Prepare directories for data:
 ~~~
-mkdir -p ~/Apps/hadoop-data/namenode
-mkdir -p ~/Apps/hadoop-data/datanode
-mkdir -p ~/Apps/hadoop-data/historyserver
-
-mkdir -p ~/Apps/hadoop-workspace
+mkdir -p ./data
 ~~~
 
 Depoyment of containers:
 ~~~
-docker-compose -f docker-compose up -d
+docker-compose -f docker-compose.yaml up -d
 ~~~
 
 
@@ -37,8 +26,8 @@ docker-compose -f docker-compose up -d
 ## Technologies
 ---
 Project is created with:
-* Ubuntu verion: 22.04
-* Apache Hadoop version: 3.3.4
+* Ubuntu verion: 16.04
+* Apache Hadoop version: 3.2.1
 * Docker verion: 20.10.22
 * Docker-compose version: v2.11.1
 
