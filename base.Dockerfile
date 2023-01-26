@@ -152,7 +152,6 @@ echo "Protobuf uninstalling completed!" \n\
     chown -R ${USER}:${GID} ${HADOOP_CONF_DIR} && \
     chmod -R a+rw ${HADOOP_CONF_DIR} && \
     # Рабочая директория Apache Hadoop
-    mkdir -p ${HADOOP_HOME}/logs && \
     chown -R ${USER}:${GID} ${HADOOP_HOME} && \
     chmod -R a+rwx ${HADOOP_HOME} && \
     # Smoke test

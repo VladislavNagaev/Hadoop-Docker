@@ -79,7 +79,7 @@ services:
       - type: volume
         source: hadoop-nodemanager-volume
         # YARN_CONF_yarn_nodemanager_remote___app___log___dir
-        target: /tmp/logs/nodemanager
+        target: /hadoop/yarn/nodemanager
     depends_on:
       - hadoop-namenode
       - hadoop-datanode

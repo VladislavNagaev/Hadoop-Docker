@@ -2,7 +2,6 @@
 
 COMMAND="${1:-}"
 
-mkdir -p ${CORE_CONF_tmp_dir}
 
 if [ "${COMMAND}" == "namenode" ]; then
 
