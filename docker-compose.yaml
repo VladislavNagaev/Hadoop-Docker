@@ -3,7 +3,7 @@ version: "3.8"
 
 x-hadoop-common:
   &hadoop-common
-  image: hadoop-base:3.2.1
+  image: hadoop-base:3.3.4
   # build:
   #   context: .
   #   dockerfile: base.Dockerfile

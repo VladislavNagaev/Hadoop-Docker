@@ -19,7 +19,7 @@ if [ "${COMMAND}" == "namenode" ]; then
     # run the DFS namenode at first time
     if [ "`ls -A ${HDFS_CONF_dfs_namenode_name_path}`" == "" ]; then
         echo "Formatting namenode name directory: ${HDFS_CONF_dfs_namenode_name_path}"
-        ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} -format ${CLUSTER_NAME} namenode
+        ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} namenode -format ${CLUSTER_NAME}
     fi
 
     ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} namenode
