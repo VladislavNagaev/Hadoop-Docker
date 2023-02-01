@@ -1,6 +1,6 @@
 # Hadoop Docker
 
-Hadoop Docker image built on top of [ubuntu-base:16.04](https://github.com/VladislavNagaev/Ubuntu-Docker.git)
+Hadoop Docker image built on top of [ubuntu-base:18.04](https://github.com/VladislavNagaev/Ubuntu-Docker.git)
 
 ## Quick Start
 
@@ -28,7 +28,7 @@ docker-compose -f docker-compose.yaml up -d
 ## Technologies
 ---
 Project is created with:
-* Apache Hadoop version: 3.2.1
+* Apache Hadoop version: 3.3.4
 * Docker verion: 20.10.22
 * Docker-compose version: v2.11.1
 
@@ -38,7 +38,7 @@ Project Organization
 
     ├── README.md
     │
-    ├── postgres  
+    ├── entrypoint  
     │   ├── hadoop-entrypoint.sh
     │   ├── hadoop-configure.sh 
     │   ├── hadoop-initialization.sh

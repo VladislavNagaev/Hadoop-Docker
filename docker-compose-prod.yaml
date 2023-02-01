@@ -9,7 +9,8 @@ x-hadoop-common:
   #   dockerfile: base.Dockerfile
   networks:
     - main-overlay-network
-  env_file: ${APPS_ENV}/hadoop.env
+  env_file: 
+    - ${APPS_ENV}/hadoop.env
   restart: always
 
 services:

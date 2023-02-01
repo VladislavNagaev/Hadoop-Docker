@@ -1,5 +1,5 @@
 # Образ на основе которого будет создан контейнер
-FROM --platform=linux/amd64 ubuntu-base:16.04
+FROM --platform=linux/amd64 ubuntu-base:18.04
 
 LABEL maintainer="Vladislav Nagaev <vladislav.nagaew@gmail.com>"
 
@@ -11,8 +11,8 @@ WORKDIR /
 
 ENV \ 
     # Задание версий сервисов
-    PROTOBUF_VERSION=2.5.0 \
-    HADOOP_VERSION=3.2.1
+    PROTOBUF_VERSION=3.7.1 \
+    HADOOP_VERSION=3.3.4
 
 ENV \
     # Задание домашних директорий
@@ -26,7 +26,7 @@ ENV \
 
 ENV \
     # URL-адреса для скачивания
-    PROTOBUF_URL=https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/${PROTOBUF_NAME}.tar.gz \
+    PROTOBUF_URL=https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-java-${PROTOBUF_VERSION}.tar.gz \
     HADOOP_URL=https://github.com/apache/hadoop/archive/refs/tags/rel/release-${HADOOP_VERSION}.tar.gz \
     # Обновление переменных путей
     PATH=${HADOOP_HOME}/bin:${PATH}
@@ -42,7 +42,6 @@ PROTOBUF_SOURCE_PATH="${1:-}" \n\
 echo "Protobuf building started ..." \n\
 owd="$(pwd)" \n\
 cd ${PROTOBUF_SOURCE_PATH} \n\
-./autogen.sh \n\
 ./configure --prefix=/usr \n\
 make --jobs=$(nproc --all) \n\
 make --jobs=$(nproc --all) install \n\
@@ -96,7 +95,6 @@ echo "Protobuf uninstalling completed!" \n\
     apt install --no-install-recommends --yes pkg-config && \
     apt install --no-install-recommends --yes libssl-dev && \
     apt install --no-install-recommends --yes libsasl2-dev && \
-    apt install --no-install-recommends --yes netcat && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
     # Установка Maven
@@ -104,7 +102,7 @@ echo "Protobuf uninstalling completed!" \n\
     apt install --no-install-recommends --yes maven && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    # Установка ProtocolBuffer 2.5.0
+    # Установка ProtocolBuffer
     # --------------------------------------------------------------------------
     # Скачивание архива
     curl --fail --show-error --location ${PROTOBUF_URL} --output /tmp/${PROTOBUF_NAME}.tar.gz && \
@@ -120,7 +118,7 @@ echo "Protobuf uninstalling completed!" \n\
     # --------------------------------------------------------------------------
     # Установка Snappy compression
     # --------------------------------------------------------------------------
-    apt install --no-install-recommends --yes snappy && \
+    apt install --no-install-recommends --yes ubuntu-snappy && \
     apt install --no-install-recommends --yes libsnappy-dev && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------

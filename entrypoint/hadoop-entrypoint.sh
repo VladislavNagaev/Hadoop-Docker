@@ -6,7 +6,7 @@ hadoop-termination() {
     source /entrypoint/hadoop-termination.sh $COMMAND
 }
 
-source /entrypoint/hadoop-wait_for_it.sh
+source /entrypoint/wait_for_it.sh
 
 source /entrypoint/hadoop-configure.sh
 
