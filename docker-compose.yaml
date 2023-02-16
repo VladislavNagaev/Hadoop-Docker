@@ -7,6 +7,9 @@ x-hadoop-common:
   # build:
   #   context: .
   #   dockerfile: base.Dockerfile
+  #   dockerfile: base.Dockerfile
+  networks:
+    - main-network
   env_file: ./hadoop.env
   restart: always
 
@@ -103,6 +106,15 @@ services:
       - hadoop-namenode
       - hadoop-datanode
       - hadoop-resourcemanager
+
+
+networks:
+  main-network:
+    name: main-network
+    external: false
+    driver: bridge
+    attachable: false
+
 
 volumes:
   hadoop-namenode-volume:

@@ -7,5 +7,6 @@
 
 .*.swp
 
-data/
+data/*
 
+*.tar

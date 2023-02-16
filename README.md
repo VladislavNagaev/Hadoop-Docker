@@ -6,12 +6,7 @@ Hadoop Docker image built on top of [ubuntu-base:18.04](https://github.com/Vladi
 
 Build image:
 ~~~
-make --jobs=$(nproc --all) --file Makefile 
-~~~
-
-Prepare directories for data:
-~~~
-mkdir -p ./data
+make --file Makefile 
 ~~~
 
 Depoyment of containers:
