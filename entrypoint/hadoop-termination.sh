@@ -1,46 +1,46 @@
 #!/bin/bash
 
-COMMAND="${1:-}"
+COMMAND="${1:-}";
+
 
 if [ "${COMMAND}" == "namenode" ]; then
 
-    echo "Ending Hadoop namenode ..."
+    echo -e "${blue_b}Ending Hadoop namenode ...${reset_font}";
 
-    ${HADOOP_HOME}/bin/hdfs --daemon stop namenode
+    ${HADOOP_HOME}/bin/hdfs --daemon stop namenode;
 
-fi
+fi;
 
 if [ "${COMMAND}" == "datanode" ]; then
 
-    echo "Ending Hadoop datanode ..."
+    echo -e "${blue_b}Ending Hadoop datanode ...${reset_font}";
 
+    ${HADOOP_HOME}/bin/hdfs --daemon stop datanode;
 
-    ${HADOOP_HOME}/bin/hdfs --daemon stop datanode
-
-fi
+fi;
 
 if [ "${COMMAND}" == "historyserver" ]; then
 
-    echo "Ending Hadoop historyserver ..."
+    echo -e "${blue_b}Ending Hadoop historyserver ...${reset_font}";
 
-    ${HADOOP_HOME}/bin/yarn --daemon stop historyserver
+    ${HADOOP_HOME}/bin/yarn --daemon stop historyserver;
 
-fi
+fi;
 
 if [ "${COMMAND}" == "nodemanager" ]; then
 
-    echo "Ending Hadoop nodemanager ..."
+    echo -e "${blue_b}Ending Hadoop nodemanager ...${reset_font}";
 
-    ${HADOOP_HOME}/bin/yarn --daemon stop nodemanager
+    ${HADOOP_HOME}/bin/yarn --daemon stop nodemanager;
 
-fi
+fi;
 
 if [ "${COMMAND}" == "resourcemanager" ]; then
 
-    echo "Ending Hadoop resourcemanager ..."
+    echo -e "${blue_b}Ending Hadoop resourcemanager ...${reset_font}";
 
-    ${HADOOP_HOME}/bin/yarn --daemon stop resourcemanager
+    ${HADOOP_HOME}/bin/yarn --daemon stop resourcemanager;
 
-fi
+fi;
 
-exit $?
+exit $?;

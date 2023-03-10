@@ -7,6 +7,7 @@ x-hadoop-common:
   # build:
   #   context: .
   #   dockerfile: base.Dockerfile
+  hostname: hadoop
   networks:
     - main-overlay-network
   env_file: 

@@ -1,68 +1,67 @@
 #!/bin/bash
 
-echo "Hadoop-node configuration started ..."
+echo -e "${blue_b}Hadoop-node configuration started ...${reset_font}";
 
 
 function configure_conffile() {
 
-    local path=$1
-    local envPrefix=$2
+    local path=$1;
+    local envPrefix=$2;
 
-    local var
-    local value
+    local var;
+    local value;
     
-    echo "Configuring $path"
+    echo -e "${cyan_b}Configuring $path${reset_font}";
 
     for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=$envPrefix`; do 
 
-        name=`echo ${c} | perl -pe 's/___/-/g; s/__/@/g; s/_/./g; s/@/_/g;'`
-        var="${envPrefix}_${c}"
-        value=${!var}
+        name=`echo ${c} | perl -pe 's/___/-/g; s/__/@/g; s/_/./g; s/@/_/g;'`;
+        var="${envPrefix}_${c}";
+        value=${!var};
 
-        local entry="<property><name>$name</name><value>${value}</value></property>"
-        local escapedEntry=$(echo $entry | sed 's/\//\\\//g')
+        local entry="<property><name>$name</name><value>${value}</value></property>";
+        local escapedEntry=$(echo $entry | sed 's/\//\\\//g');
 
-        echo " - Setting $name=$value"
-        sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" $path
+        echo -e "${green} - Setting $name=$value${reset_font}";
+        sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" $path;
 
-    done
-}
+    done;
+};
 
 
 function configure_envfile() {
 
-    local path=$1
-    local -n envArray=$2
+    local path=$1;
+    local -n envArray=$2;
 
-    local name
-    local value
+    local name;
+    local value;
 
-    echo "Configuring ${path}"
+    echo -e "${cyan_b}Configuring ${path}${reset_font}";
 
-    for c in "${envArray[@]}"
-    do
+    for c in "${envArray[@]}"; do
 
-        name=${c}
-        value=${!c}
+        name=${c};
+        value=${!c};
 
         if [[ -n ${value} ]]; then
-            echo " - Setting ${name}=${value}"
-            echo "export ${name}=${value}" >> ${path}
-        fi
+            echo -e "${green} - Setting ${name}=${value}${reset_font}";
+            echo -e "\nexport ${name}=${value}" | tee -a ${path} > /dev/null;
+        fi;
     
-    done
-}
+    done;
+};
 
 
 if ! [ -z ${HADOOP_PID_DIR+x} ]; then
     mkdir -p ${HADOOP_PID_DIR};
-    echo "HADOOP_PID_DIR=${HADOOP_PID_DIR}"
-fi
+    echo -e "${green}HADOOP_PID_DIR=${HADOOP_PID_DIR}${reset_font}";
+fi;
 
 if ! [ -z ${HADOOP_LOG_DIR+x} ]; then
     mkdir -p ${HADOOP_LOG_DIR};
-    echo "HADOOP_LOG_DIR=${HADOOP_LOG_DIR}"
-fi
+    echo -e "${green}HADOOP_LOG_DIR=${HADOOP_LOG_DIR}${reset_font}";
+fi;
 
 
 if ! [ -z ${HADOOP_CONF_DIR+x} ]; then
@@ -118,4 +117,4 @@ if ! [ -z ${HADOOP_CONF_DIR+x} ]; then
 
 fi
 
-echo "Hadoop-node configuration completed!"
+echo -e "${blue_b}Hadoop-node configuration completed!${reset_font}";
