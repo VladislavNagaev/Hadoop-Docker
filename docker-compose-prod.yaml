@@ -7,7 +7,6 @@ x-hadoop-common:
   # build:
   #   context: .
   #   dockerfile: base.Dockerfile
-  hostname: hadoop
   networks:
     - main-overlay-network
   env_file: 
@@ -19,6 +18,7 @@ services:
   hadoop-namenode:
     <<: *hadoop-common
     container_name: hadoop-namenode
+    hostname: hadoop-namenode
     command: namenode
     environment:
       - CLUSTER_NAME=main
@@ -47,6 +47,7 @@ services:
   hadoop-datanode:
     <<: *hadoop-common
     container_name: hadoop-datanode
+    hostname: hadoop-datanode
     command: datanode
     expose:
       # HADOOP_DATANODE_PORT
@@ -68,6 +69,7 @@ services:
   hadoop-resourcemanager:
     <<: *hadoop-common
     container_name: hadoop-resourcemanager
+    hostname: hadoop-resourcemanager
     command: resourcemanager
     expose:
       # HADOOP_RESOURCEMANAGER_PORT
@@ -86,6 +88,7 @@ services:
   hadoop-nodemanager:
     <<: *hadoop-common
     container_name: hadoop-nodemanager
+    hostname: hadoop-nodemanager
     command: nodemanager
     expose:
       # HADOOP_NODEMANAGER_PORT
@@ -109,6 +112,7 @@ services:
   hadoop-historyserver:
     <<: *hadoop-common
     container_name: hadoop-historyserver
+    hostname: hadoop-historyserver
     command: historyserver
     expose:
       # HADOOP_HISTORYSERVER_PORT
