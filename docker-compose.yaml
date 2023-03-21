@@ -8,6 +8,8 @@ x-hadoop-common:
   #   context: .
   #   dockerfile: base.Dockerfile
   hostname: hadoop
+  labels:
+    autoheal: 'true'
   networks:
     - main-network
   env_file: ./hadoop.env
