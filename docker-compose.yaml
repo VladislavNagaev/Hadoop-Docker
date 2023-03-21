@@ -7,7 +7,6 @@ x-hadoop-common:
   # build:
   #   context: .
   #   dockerfile: base.Dockerfile
-  hostname: hadoop
   labels:
     autoheal: 'true'
   networks:
