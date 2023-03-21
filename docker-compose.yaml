@@ -39,6 +39,12 @@ services:
       - type: bind
         source: ./data
         target: /workspace
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost", "9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   hadoop-datanode:
     <<: *hadoop-common
@@ -57,6 +63,12 @@ services:
         target: /hadoop/dfs/datanode
     depends_on:
       - hadoop-namenode
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost", "9864"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   hadoop-resourcemanager:
     <<: *hadoop-common
@@ -71,6 +83,12 @@ services:
     depends_on:
       - hadoop-namenode
       - hadoop-datanode
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost", "8088"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   hadoop-nodemanager:
     <<: *hadoop-common
@@ -91,6 +109,12 @@ services:
       - hadoop-namenode
       - hadoop-datanode
       - hadoop-resourcemanager
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost", "8042"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   hadoop-historyserver:
     <<: *hadoop-common
@@ -111,6 +135,12 @@ services:
       - hadoop-namenode
       - hadoop-datanode
       - hadoop-resourcemanager
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost", "8188"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 
 networks:
