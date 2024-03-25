@@ -1,6 +1,7 @@
 #!/bin/bash
 
 COMMAND="${1:-}";
+PARAMS="${@:2}";
 
 
 if [ "${COMMAND}" == "namenode" ]; then
@@ -19,10 +20,10 @@ if [ "${COMMAND}" == "namenode" ]; then
     # run the DFS namenode at first time
     if [ "`ls -A ${HDFS_CONF_dfs_namenode_name_path}`" == "" ]; then
         echo -e "${cyan_b}Formatting namenode name directory: ${HDFS_CONF_dfs_namenode_name_path}${reset_font}";
-        ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} namenode -format ${CLUSTER_NAME};
+        ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} namenode -format ${CLUSTER_NAME} ${PARAMS};
     fi;
 
-    ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} namenode;
+    ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} namenode ${PARAMS};
 
 fi;
 
@@ -34,7 +35,7 @@ if [ "${COMMAND}" == "datanode" ]; then
 
     mkdir -p ${HDFS_CONF_dfs_datanode_data_path};
 
-    ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} datanode;
+    ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} datanode ${PARAMS};
 
 fi;
 
@@ -44,7 +45,7 @@ if [ "${COMMAND}" == "historyserver" ]; then
 
     mkdir -p ${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path};
 
-    ${HADOOP_HOME}/bin/yarn --config ${HADOOP_CONF_DIR} historyserver;
+    ${HADOOP_HOME}/bin/yarn --config ${HADOOP_CONF_DIR} historyserver ${PARAMS};
 
 fi;
 
@@ -54,7 +55,7 @@ if [ "${COMMAND}" == "nodemanager" ]; then
 
     mkdir -p ${YARN_CONF_yarn_nodemanager_remote___app___log___dir};
 
-    ${HADOOP_HOME}/bin/yarn --config ${HADOOP_CONF_DIR} nodemanager;
+    ${HADOOP_HOME}/bin/yarn --config ${HADOOP_CONF_DIR} nodemanager ${PARAMS};
 
 fi;
 
@@ -62,7 +63,7 @@ if [ "${COMMAND}" == "resourcemanager" ]; then
 
     echo -e "${blue_b}Starting Hadoop resourcemanager ...${reset_font}";
 
-    ${HADOOP_HOME}/bin/yarn --config ${HADOOP_CONF_DIR} resourcemanager;
+    ${HADOOP_HOME}/bin/yarn --config ${HADOOP_CONF_DIR} resourcemanager ${PARAMS};
 
 fi
 

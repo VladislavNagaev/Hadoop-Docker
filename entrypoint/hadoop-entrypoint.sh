@@ -1,6 +1,8 @@
 #!/bin/bash
 
 COMMAND="${1:-}";
+PARAMS="${@:2}";
+
 
 hadoop-termination() {
     source /entrypoint/hadoop-termination.sh $COMMAND;
@@ -11,7 +13,7 @@ source /entrypoint/wait_for_it.sh;
 source /entrypoint/font-colors.sh;
 source /entrypoint/hadoop-configure.sh;
 
-source /entrypoint/hadoop-initialization.sh $COMMAND &
+source /entrypoint/hadoop-initialization.sh $COMMAND $PARAMS &
 
 trap hadoop-termination SIGTERM HUP INT QUIT TERM;
 

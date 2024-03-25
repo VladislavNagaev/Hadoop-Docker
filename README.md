@@ -22,8 +22,8 @@ docker-compose -f docker-compose.yaml up -d
 ## Technologies
 ---
 Project is created with:
-* Apache Hadoop version: 3.3.4
-* Docker verion: 25.0.3
+* Apache Hadoop version: 3.4.0
+* Docker verion: 26.0.0
 * Docker-compose version: v2.23.3
 
 ___
