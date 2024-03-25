@@ -19,12 +19,11 @@ ENV \
     TZ=Europe/Moscow \
     # Задание версий сервисов
     JAVA_VERSION=8 \
-    CMAKE_VERSION=3.19 \
-    CMAKE_VERSION_FULL=3.19.0 \
-    PROTOBUF_VERSION=3.7.1 \
+    GCC_VERSION=12 \
+    PROTOBUF_VERSION=3.21.12 \
     BOOST_VERSION=1.72.0 \
     BOOST_VERSION_STR=1_72_0 \
-    HADOOP_VERSION=3.3.4 \
+    HADOOP_VERSION=3.4.0 \
     # Задание директорий 
     WORK_DIRECTORY=/workspace \
     LOG_DIRECTORY=/tmp/logs \
@@ -41,14 +40,13 @@ ENV \
     # Обновление переменных путей
     PATH=${PATH}:${JAVA_HOME}/bin:${HADOOP_HOME}/bin \
     # Полные наименования сервисов
-    CMAKE_NAME=cmake-${CMAKE_VERSION_FULL} \
     PROTOBUF_NAME=protobuf-${PROTOBUF_VERSION} \
     BOOST_NAME=boost_${BOOST_VERSION_STR} \
     HADOOP_NAME=hadoop-${HADOOP_VERSION} \
     HADOOP_SOURCE_NAME=hadoop-rel-release-${HADOOP_VERSION} \
     # URL-адреса для скачивания
     CMAKE_URL=https://cmake.org/files/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION_FULL}.tar.gz \
-    PROTOBUF_URL=https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-java-${PROTOBUF_VERSION}.tar.gz \
+    PROTOBUF_URL=https://github.com/protocolbuffers/protobuf/archive/refs/tags/v${PROTOBUF_VERSION}.tar.gz \
     BOOST_URL=https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_${BOOST_VERSION_STR}.tar.gz/download \
     HADOOP_URL=https://github.com/apache/hadoop/archive/refs/tags/rel/release-${HADOOP_VERSION}.tar.gz
 
@@ -60,10 +58,9 @@ RUN \
     echo "root:root" | chpasswd && \
     # Создание группы и назначение пользователя в ней
     groupadd --gid ${GID} --non-unique ${GROUP} && \
-    useradd --system --create-home --home-dir ${HOME} --shell /bin/bash --gid ${GID} --groups ${GROUPS} --uid ${UID} --password ${PASSWORD} ${USER} && \
-    # useradd --system --create-home --home-dir ${HOME} --shell /bin/bash \
-    # --gid ${GID} --groups ${GROUPS} --uid ${UID} ${USER} \
-    # --password $(perl -e 'print crypt($ARGV[0], "password")' ${PASSWORD})  && \
+    useradd --system --create-home --home-dir ${HOME} --shell /bin/bash \
+    --gid ${GID} --groups ${GROUPS} --uid ${UID} ${USER} \
+    --password $(perl -e 'print crypt($ARGV[0], "password")' ${PASSWORD})  && \
     # Обновление ссылок
     echo "deb http://deb.debian.org/debian/ sid main" >> /etc/apt/sources.list && \
     # Обновление путей
@@ -104,6 +101,8 @@ RUN \
     apt install --no-install-recommends --yes autoconf && \
     apt install --no-install-recommends --yes automake && \
     apt install --no-install-recommends --yes git && \
+    apt install --no-install-recommends --yes cmake && \
+    apt install --no-install-recommends --yes maven && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
     # Установка Java
@@ -151,20 +150,6 @@ do \n\
 done \n\
 ''' > ${ENTRYPOINT_DIRECTORY}/wait_for_it.sh && \
     cat ${ENTRYPOINT_DIRECTORY}/wait_for_it.sh && \
-    # Сборка CMake
-    echo \
-'''#!/bin/bash \n\
-CMAKE_SOURCE_PATH="${1:-}" \n\
-echo "CMake building started ..." \n\
-owd="$(pwd)" \n\
-cd ${CMAKE_SOURCE_PATH} \n\
-./bootstrap \n\
-make --jobs=$(nproc) \n\
-make install \n\
-cd "${owd}" \n\
-echo "CMake building completed!" \n\
-''' > ${ENTRYPOINT_DIRECTORY}/cmake-building.sh && \
-    cat ${ENTRYPOINT_DIRECTORY}/cmake-building.sh && \
     # Сборка ProtocolBuffer
     echo \
 '''#!/bin/bash \n\
@@ -172,6 +157,7 @@ PROTOBUF_SOURCE_PATH="${1:-}" \n\
 echo "Protobuf building started ..." \n\
 owd="$(pwd)" \n\
 cd ${PROTOBUF_SOURCE_PATH} \n\
+./autogen.sh \n\
 ./configure --prefix=/usr \n\
 make --jobs=$(nproc) \n\
 make install \n\
@@ -205,18 +191,6 @@ cd "${owd}" \n\
 echo "Hadoop building completed!" \n\
 ''' > ${ENTRYPOINT_DIRECTORY}/hadoop-building.sh && \
     cat ${ENTRYPOINT_DIRECTORY}/hadoop-building.sh && \
-    # Удаление CMake
-    echo \
-'''#!/bin/bash \n\
-CMAKE_SOURCE_PATH="${1:-}" \n\
-echo "CMake unistalling started ..." \n\
-owd="$(pwd)" \n\
-cd ${CMAKE_SOURCE_PATH} \n\
-make uninstall \n\
-cd "${owd}" \n\
-echo "CMake unistalling completed!" \n\
-''' > ${ENTRYPOINT_DIRECTORY}/cmake-uninstalling.sh && \
-    cat ${ENTRYPOINT_DIRECTORY}/cmake-uninstalling.sh && \
     # Удаление ProtocolBuffer
     echo \
 '''#!/bin/bash \n\
@@ -249,39 +223,21 @@ echo "Protobuf uninstalling completed!" \n\
     # GNU
     apt install --no-install-recommends --yes libtool && \
     apt install --no-install-recommends --yes pkg-config && \
+    # libtirpc
+    apt install --no-install-recommends --yes libtirpc-dev && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    # Установка Maven
+    # Установка GCC
     # --------------------------------------------------------------------------
-    apt install --no-install-recommends --yes maven>=3.3 && \
-    # Smoke test
-    mvn --version && \
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Установка GCC 9.3.0
-    # --------------------------------------------------------------------------
-    # add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
-    # apt --yes update && \
-    apt install --no-install-recommends --yes g++-9 && \
-    apt install --no-install-recommends --yes gcc-9 && \
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-9 && \
+    # install gcc
+    apt install --no-install-recommends --yes g++-${GCC_VERSION} && \
+    apt install --no-install-recommends --yes gcc-${GCC_VERSION} && \
+    # install alternatives
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 60 \
+    --slave /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} && \
     # Smoke test
     gcc --version && \
     g++ --version && \
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Установка CMake
-    # --------------------------------------------------------------------------
-    # Скачивание архива
-    curl --fail --show-error --location ${CMAKE_URL} --output /tmp/${CMAKE_NAME}.tar.gz && \
-    # Распаковка архива в рабочую папку
-    tar -xf /tmp/${CMAKE_NAME}.tar.gz -C /tmp/ && \
-    # Удаление исходного архива
-    rm /tmp/${CMAKE_NAME}.tar.gz* && \
-    # Сборка CMake
-    "${ENTRYPOINT_DIRECTORY}/cmake-building.sh" /tmp/${CMAKE_NAME} && \
-    # Smoke test
-    cmake --version && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
     # Установка ProtocolBuffer
@@ -314,7 +270,6 @@ echo "Protobuf uninstalling completed!" \n\
     # --------------------------------------------------------------------------
     # Установка Snappy compression
     # --------------------------------------------------------------------------
-    # apt install --no-install-recommends --yes ubuntu-snappy && \
     apt install --no-install-recommends --yes libsnappy-dev && \
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -332,8 +287,6 @@ echo "Protobuf uninstalling completed!" \n\
     tar -xvf /tmp/${HADOOP_SOURCE_NAME}.tar.gz -C /tmp/ && \
     # Удаление исходного архива
     rm /tmp/${HADOOP_SOURCE_NAME}.tar.gz* && \
-    # Bug fix https://github.com/eirslett/frontend-maven-plugin/issues/757
-    sed -i s/$\{nodejs.version\}/v14.0.0/g /tmp/${HADOOP_SOURCE_NAME}/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-catalog/hadoop-yarn-applications-catalog-webapp/pom.xml && \
     # Сборка Apache Hadoop
     "${ENTRYPOINT_DIRECTORY}/hadoop-building.sh" /tmp/${HADOOP_SOURCE_NAME} && \
     # Перемещение собранного Apache Hadoop в домашнюю директорию
@@ -358,13 +311,11 @@ echo "Protobuf uninstalling completed!" \n\
     # --------------------------------------------------------------------------
     # Удаление Maven
     apt remove --yes maven && \
-    # Удаление GCC 9.3.0
-    apt remove --yes g++-9 && \
-    apt remove --yes gcc-9 && \
+    # Удаление GCC
+    apt remove --yes g++-${GCC_VERSION} && \
+    apt remove --yes gcc-${GCC_VERSION} && \
     # Удаление CMake
-    "${ENTRYPOINT_DIRECTORY}/cmake-uninstalling.sh" /tmp/${CMAKE_NAME} && \
-    # Удаление исходного кода CMake
-    rm --recursive /tmp/${CMAKE_NAME} && \
+    apt remove --yes cmake && \
     # Удаление ProtocolBuffer
     "${ENTRYPOINT_DIRECTORY}/protobuf-uninstalling.sh" /tmp/${PROTOBUF_NAME} && \
     # Удаление исходного кода ProtocolBuffer
