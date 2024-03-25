@@ -1,6 +1,6 @@
 # Hadoop Docker
 
-Hadoop Docker image built on top of [ubuntu-base:18.04](https://github.com/VladislavNagaev/Ubuntu-Docker.git)
+Hadoop Docker image built on top of [debian:12-slim](https://hub.docker.com/_/debian)
 
 ## Quick Start
 
@@ -14,7 +14,6 @@ Depoyment of containers:
 docker-compose -f docker-compose.yaml up -d
 ~~~
 
-
 ## Interfaces:
 ---
 * [Hadoop WebUi](http://127.0.0.1:9870/explorer.html#/)
@@ -24,8 +23,8 @@ docker-compose -f docker-compose.yaml up -d
 ---
 Project is created with:
 * Apache Hadoop version: 3.3.4
-* Docker verion: 20.10.22
-* Docker-compose version: v2.11.1
+* Docker verion: 25.0.3
+* Docker-compose version: v2.23.3
 
 ___
 Project Organization
